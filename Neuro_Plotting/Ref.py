@@ -98,6 +98,15 @@ class Ref():
     
     def get_ref_vals(self, hemi=None):
         pass
+
+    def key_transform(self, key):
+        
+        key = key.lower()
+        key = key.replace('.', ' ')
+        key = key.replace('-', ' ')
+        key = key.replace('_', ' ')
+        
+        return key
     
     def get_plot_vals(self, data, hemi=None, i_keys=[], d_keys=[]):
         
@@ -109,16 +118,20 @@ class Ref():
         for name in roi_dict:
 
             value = roi_dict[name]
-            name = name.lower()
+            name = self.key_transform(name)
 
             # Apply the mapping
             for key in self.mapping:
-                if key in name:
-                    name = name.replace(key, self.mapping[key])
+                trans_key = self.key_transform(key)
+
+                if trans_key in name:
+                    name = name.replace(trans_key, self.key_transform(self.mapping[key]))
 
             # Find the ind
             for label in self.label_2_int:
-                if label in name:
+                trans_label = self.key_transform(label)
+
+                if trans_label in name:
                     ind = int(self.label_2_int[label])
                     break
             else:
