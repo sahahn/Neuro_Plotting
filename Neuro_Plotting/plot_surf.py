@@ -8,7 +8,6 @@ from matplotlib.cm import ScalarMappable, get_cmap
 from matplotlib.colors import Normalize, LinearSegmentedColormap
 
 from nilearn.surface import load_surf_data, load_surf_mesh
-from nilearn._utils.compat import _basestring
 from nilearn.plotting.img_plotting import (_get_colorbar_and_data_ranges)
 
 import matplotlib.colors as colors
@@ -193,7 +192,7 @@ def plot_surf(surf_mesh, surf_map=None, bg_map=None,
         cmap = plt.cm.get_cmap(plt.rcParamsDefault['image.cmap'])
     else:
         # if cmap is given as string, translate to matplotlib cmap
-        if isinstance(cmap, _basestring):
+        if isinstance(cmap, str):
             cmap = plt.cm.get_cmap(cmap)
 
     # initiate figure and 3d axes
@@ -383,7 +382,7 @@ def add_collage_colorbar(figure, ax, smfs, vmin, vmax,
     if cmap is None:
         cmap = get_cmap(plt.rcParamsDefault['image.cmap'])
     else:
-        if isinstance(cmap, _basestring):
+        if isinstance(cmap, str):
             cmap = get_cmap(cmap)
 
     if 'threshold' in kwargs:
