@@ -57,7 +57,7 @@ def plot_surf(surf_mesh, surf_map=None, bg_map=None,
               bg_on_data=False, darkness=1, vmin=None, vmax=None,
               cbar_vmin=None, cbar_vmax=None,
               title=None, output_file=None, axes=None, figure=None,
-              midpoint=None, dist=6, **kwargs):
+              midpoint=None, dist=6.5, **kwargs):
     """ Plotting of surfaces with optional background and data
     .. versionadded:: 0.3
     Parameters
@@ -264,7 +264,7 @@ def plot_surf(surf_mesh, surf_map=None, bg_map=None,
         if vmax is None:
             vmax = np.nanmax(surf_map_faces)
 
-        # treshold if inidcated
+        # treshold if indicated
         if threshold is None:
             kept_indices = np.arange(surf_map_faces.shape[0])
         else:
@@ -324,10 +324,10 @@ def plot_surf(surf_mesh, surf_map=None, bg_map=None,
 
         p3dcollec.set_facecolors(face_colors)
 
+    axes.patch.set_alpha(0)
+
     if title is not None:
         axes.set_title(title, position=(.5, .95))
-
-    axes.patch.set_alpha(0)
 
     # save figure if output file is given
     if output_file is not None:

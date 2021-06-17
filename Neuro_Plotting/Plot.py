@@ -61,9 +61,9 @@ def _setup_fig_axes(figure, axes, subplot_spec, get_grid, figsize,
 
         if subplot_spec is None:
             grid = gridspec.GridSpec(n_rows, len(widths),
-                                    wspace=wspace,
-                                    hspace=hspace,
-                                    width_ratios=widths)
+                                     wspace=wspace,
+                                     hspace=hspace,
+                                     width_ratios=widths)
         else:
             grid =\
                 gridspec.GridSpecFromSubplotSpec(n_rows, len(widths),
@@ -126,7 +126,8 @@ def Plot_Surf_Collage(data, ref=None, surf_mesh='inflated',
                       cbar_vmin=None, cbar_vmax=None,
                       figsize=(15, 10),
                       figure=None, axes=None, subplot_spec=None,
-                      wspace=0, hspace=0, midpoint=None, colorbar=False,
+                      wspace=-.35, hspace=-.1,
+                      midpoint=None, colorbar=False,
                       colorbar_params={},
                       **kwargs):
     '''
@@ -170,7 +171,7 @@ def Plot_Surf_Collage(data, ref=None, surf_mesh='inflated',
         views = ['posterior', 'posterior']
         widths = [1, 1]
 
-    proj_3d = [['3d' for j in range(n_cols)] for i in range(n_rows)]
+    proj_3d = [['3d' for _ in range(n_cols)] for _ in range(n_rows)]
 
     # Setup figres and axes
     figure, axes, colorbar_ax =\
@@ -219,15 +220,16 @@ def Plot_SurfVol_Collage(surf, vol,
                          vmin=None, vmax=None,
                          cbar_vmin=None, cbar_vmax=None,
                          figure=None, axes=None, subplot_spec=None,
-                         figsize=(20, 20), wspace=0, hspace=0,
+                         figsize=(20, 20),
                          title=None, title_sz=18,
                          colorbar=False,
+                         hspace=0, wspace=0,
                          colorbar_params={},
                          surf_params={}, vol_params={}):
 
     if 'midpoint' in surf_params:
         if surf_params['midpoint'] is not None:
-            print('Warning: midpoint isnt supported for volumetric plotting',
+            print('Warning: midpoint is not supported for volumetric plotting',
                   'so the passed midpoint param will only be applied to',
                   'the surface data, which will be misleading...')
 

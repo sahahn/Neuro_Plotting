@@ -1,10 +1,9 @@
 from nibabel.freesurfer.io import read_annot, read_geometry
 import nibabel as nib
-import pandas as pd
 from nilearn.surface import load_surf_data
-from Neuro_Plotting.plot_surf import plot_surf
 import numpy as np
 import os
+from Neuro_Plotting import data_dr as def_data_dr
 
 
 def save_mapping(mapping, loc):
@@ -78,20 +77,29 @@ def get_roi_dict(data, i_keys=[], d_keys=[]):
 
 class Ref():
     
-    def __init__(self, data_dr, space, parc):
+    def __init__(self, space, parc, data_dr='default'):
                
-        self.data_dr = data_dr
         self.space = space
         self.parc = parc
+
+        if data_dr == 'default':
+            data_dr = def_data_dr
+
+        self.data_dr = data_dr
         
         self.load_mappings()
         self.load_ref()
         
     def load_mappings(self):
-        
-        map_loc = self.data_dr + 'mappings/' + self.parc + '.'
-        self.mapping = load_mapping(map_loc + 'mapping.txt')
-        self.label_2_int = load_mapping(map_loc + 'label_2_int.txt')
+
+        map_loc = os.path.join(self.data_dr, 'mappings', self.parc + '.')
+
+        try:
+            self.mapping = load_mapping(map_loc + 'mapping.txt')
+            self.label_2_int = load_mapping(map_loc + 'label_2_int.txt')
+        except FileNotFoundError:
+            self.mapping = None
+            self.label_2_int = None
     
     def load_ref(self):
         pass
@@ -116,8 +124,8 @@ class Ref():
         plot_vals = np.zeros(np.shape(ref_vals))
 
         for name in roi_dict:
-
             value = roi_dict[name]
+
             name = self.key_transform(name)
 
             # Apply the mapping
@@ -143,14 +151,19 @@ class Ref():
 
 class SurfRef(Ref):
     
-    def __init__(self, data_dr, space='fsaverage5', parc='destr'):
-        super().__init__(data_dr, space, parc)
-        
-    def load_ref(self):
-        
-        ref_loc = self.data_dr + self.space + '/label/'
+    def __init__(self, space='fsaverage5', parc='destr',
+                 data_dr='default', surf_mesh=None, bg_map=None):
 
-        lh_loc = ref_loc + 'lh.' + self.parc
+        super().__init__(space, parc, data_dr)
+
+        self.surf_mesh = surf_mesh
+        self.bg_map = bg_map
+    
+    def load_ref(self):
+
+        ref_loc = os.path.join(self.data_dr, self.space, 'label')
+
+        lh_loc = os.path.join(ref_loc, 'lh.' + self.parc)
         if os.path.exists(lh_loc + '.annot'):
             self.lh_ref = read_annot(lh_loc + '.annot')[0]
         elif os.path.exists(lh_loc + '.gii'):
@@ -158,7 +171,7 @@ class SurfRef(Ref):
         elif os.path.exists(lh_loc + '.npy'):
             self.lh_ref = np.load(lh_loc + '.npy')
 
-        rh_loc = ref_loc + 'rh.' + self.parc
+        rh_loc = os.path.join(ref_loc, 'rh.' + self.parc)
         if os.path.exists(rh_loc + '.annot'):
             self.rh_ref = read_annot(rh_loc + '.annot')[0]
         elif os.path.exists(rh_loc + '.gii'):
@@ -191,8 +204,8 @@ class SurfRef(Ref):
             hemi = 'lh'
         if hemi == 'right':
             hemi = 'rh'
-        
-        loc = self.data_dr + self.space + '/surf/' + hemi + '.' + name
+
+        loc = os.path.join(self.data_dr, self.space, 'surf',  hemi + '.' + name)
 
         if os.path.exists(loc):
             try:
@@ -208,14 +221,13 @@ class SurfRef(Ref):
 
 class VolRef(Ref):
     
-    def __init__(self, data_dr, space='mni', parc='aparc'):
-        super().__init__(data_dr, space, parc)
+    def __init__(self, space='mni', parc='aparc', data_dr='default'):
+        super().__init__(space, parc, data_dr)
     
     def load_ref(self):
         
-        ref_loc = self.data_dr + self.space + '/'
-        
-        ref_vol_raw = nib.load(ref_loc + self.parc + '.mgz')
+        ref_loc = os.path.join(self.data_dr, self.space)
+        ref_vol_raw = nib.load(os.path.join(ref_loc, self.parc + '.mgz'))
         self.ref_vol_affine = ref_vol_raw.affine
         self.ref_vol = ref_vol_raw.get_fdata()
         
