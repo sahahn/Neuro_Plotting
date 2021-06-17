@@ -57,6 +57,7 @@ def _load_data_and_ref(data, space=None):
     return (lh, rh), ref
 
 def plot_surf_parc(data, space=None, surf_mesh=None, bg_map=None,
+                   cmap='prism',
                    bg_on_data=True, darkness=None,
                    wspace=-.35, hspace=-.1, alpha=1,
                    threshold=.1, colorbar=False, **kwargs):
@@ -73,7 +74,7 @@ def plot_surf_parc(data, space=None, surf_mesh=None, bg_map=None,
     Plot_Surf_Collage(data=data, ref=ref,
                       surf_mesh=surf_mesh,
                       bg_map=bg_map,
-                      cmap='gist_ncar',
+                      cmap=cmap,
                       avg_method='median',
                       threshold=threshold,
                       symmetric_cbar=False,
