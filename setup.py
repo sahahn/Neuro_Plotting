@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='Neuro_Plotting',
-      version='0.1',
+      version='0.2',
       description='Plotting helper tool',
       url='http://github.com/sahahn/Neuro_Plotting',
       author='Sage Hahn',
