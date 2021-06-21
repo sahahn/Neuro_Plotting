@@ -57,8 +57,7 @@ def _load_data_and_ref(data, space=None):
     return (lh, rh), ref
 
 def plot_surf_parc(data, space=None, surf_mesh=None, bg_map=None,
-                   cmap='prism',
-                   bg_on_data=True, darkness=None,
+                   cmap='prism', bg_on_data=True, darkness=None,
                    wspace=-.35, hspace=-.1, alpha=1,
                    threshold=.1, colorbar=False, **kwargs):
 
@@ -84,7 +83,33 @@ def plot_surf_parc(data, space=None, surf_mesh=None, bg_map=None,
                       wspace=wspace, hspace=hspace,
                       colorbar=colorbar, **kwargs)
 
+def plot_surf(data, space=None, surf_mesh=None, bg_map=None,
+              cmap='cold_hot', bg_on_data=True, darkness=None,
+              avg_method='mean', wspace=-.35, hspace=-.1, alpha=1,
+              symmetric_cbar=False, threshold=None,
+              colorbar=False, **kwargs):
 
+    data, ref = _load_data_and_ref(data, space=space)
+
+    if surf_mesh is None:
+        surf_mesh = ref.surf_mesh
+    if bg_map is None:
+        bg_map = ref.bg_map
+    if darkness is None:
+        darkness = ref.darkness
+
+    Plot_Surf_Collage(data=data, ref=ref,
+                      surf_mesh=surf_mesh,
+                      bg_map=bg_map,
+                      cmap=cmap,
+                      avg_method=avg_method,
+                      threshold=threshold,
+                      symmetric_cbar=symmetric_cbar,
+                      alpha=alpha,
+                      bg_on_data=bg_on_data,
+                      darkness=darkness,
+                      wspace=wspace, hspace=hspace,
+                      colorbar=colorbar, **kwargs)
     
 
 
