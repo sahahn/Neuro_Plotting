@@ -112,4 +112,20 @@ def plot_surf(data, space=None, surf_mesh=None, bg_map=None,
                       colorbar=colorbar, **kwargs)
     
 
+def plot(data, space=None):
+    '''Most automated, least flexible.'''
+
+    data, _ = _load_data_and_ref(data, space=space)
+    unique_lh = np.unique(data[0])
+
+    if all([float(u).is_integer() for u in unique_lh]):
+        plot_surf_parc(data, space=space)
+    else:
+        plot_surf(data, space=space)
+
+
+
+
+
+
 
